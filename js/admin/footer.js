@@ -472,7 +472,7 @@ $(function () {
                             opacity: 0
                         }, 150, function () {
                             $this.hide().prev().show(function () {
-                                $.post(intelli.config.admin_url + '/actions/read.json', {action: 'remove-installer'}, function (response) {
+                                intelli.post(intelli.config.admin_url + '/actions/read.json', {action: 'remove-installer'}, function (response) {
                                     if (!response.error) {
                                         $this.prev().animate(
                                             {
@@ -582,6 +582,7 @@ $(function () {
                         $submit
                             .attr('disabled', true)
                             .html('<span class="fa fa-refresh fa-spin fa-fw"></span><span class="sr-only">' + _t('uploading_please_wait') + '</span> ' + _t('uploading_please_wait'));
+                        formData.append(intelli.securityTokenKey, intelli.securityToken);
                         formData.append('action', 'dropzone-upload-file');
                         formData.append('field', fieldName);
                         formData.append('item', itemName);
@@ -618,7 +619,7 @@ $(function () {
                                 params.itemid = itemId;
                             }
 
-                            $.post(intelli.config.admin_url + '/actions/read.json', params).done(function (response) {
+                            intelli.post(intelli.config.admin_url + '/actions/read.json', params).done(function (response) {
                                 intelli.notifFloatBox({
                                     msg: response.message,
                                     type: response.error ? 'error' : 'success',

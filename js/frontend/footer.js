@@ -6,7 +6,7 @@ $(function () {
             data = $this.data(),
             id = data.id;
 
-        $.post(intelli.config.ia_url + 'search.json', {action: 'delete', id: id}, function (data) {
+        intelli.post(intelli.config.ia_url + 'search.json', {action: 'delete', id: id}, function (data) {
             if (Boolean(data.result)) {
                 var $wrap = $this.closest('.modal-body'),
                     itemsCount = $('tr', $wrap).length;
@@ -186,7 +186,7 @@ $(function () {
 
         intelli.confirm(_t('sure_rm_file'), '', function (result) {
             if (result) {
-                $.post(intelli.config.ia_url + 'actions/read.json', {
+                intelli.post(intelli.config.ia_url + 'actions/read.json', {
                     action: 'delete-file',
                     item: item,
                     field: field,

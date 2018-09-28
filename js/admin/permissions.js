@@ -16,7 +16,7 @@ intelli.permissions =
 
             defaults || (params.access = access);
 
-            $.post(this.url, intelli.includeSecurityToken(params, self.token), function (response) {
+            intelli.post(this.url, params, function (response) {
                 if (response.result) {
                     self.toggle($toggler, defaults ? null : params.access);
                     if ('admin_access' == params.object) {
@@ -53,7 +53,7 @@ intelli.permissions =
                 params.action = actions;
             }
 
-            $.post(self.url, intelli.includeSecurityToken(params, self.token), function (response) {
+            intelli.post(self.url, params, function (response) {
                 if (response.result) {
                     self.button = $ctl.get(0);
                     $togglers.each(function () {

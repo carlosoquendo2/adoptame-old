@@ -4,7 +4,7 @@ $(function () {
         var title = alias != '' ? alias : $('#input-title').val();
 
         if ('' != title) {
-            $.post(intelli.config.ia_url + 'blog/alias.json', {alias: 'alias', title: title}, function (data) {
+            intelli.post(intelli.config.ia_url + 'blog/alias.json', {alias: 'alias', title: title}, function (data) {
                 if ('' != data.url) {
                     $('#title_url').text(data.url);
                     $('#title_box').fadeIn();

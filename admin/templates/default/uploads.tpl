@@ -54,11 +54,13 @@
 {ia_add_js}
 $(function()
 {
-    $('#elfinder').elfinder(
-    {
+    var opts = {
+        customData: { },
         url : intelli.config.admin_url + '/uploads/read.json',
         height: 450
-    });
+    };
+    opts.customData[intelli.securityTokenKey] = intelli.securityToken;
+    $('#elfinder').elfinder(opts);
 });
 {/ia_add_js}
 {/if}

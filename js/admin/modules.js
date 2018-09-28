@@ -1,4 +1,4 @@
-function dialog_package(type, module, url) {
+function dialog_package(type, url, module) {
     intelli.config.default_package = $('#js-default-package-value').val();
 
     var defaultPackage =
@@ -19,21 +19,21 @@ function dialog_package(type, module, url) {
     }
     var html = '';
 
-    if ('install' == type) {
+    if ('install' === type) {
         html = '<div class="url_type"><label for="root_type"><input type="radio" value="0" name="type" id="root_type"'
             + (intelli.config.default_package ? '' : ' checked') + '> ' + _t('root_title') + '</label><div class="url_type_info"><p>' + _t('root_about') + '</p>'
             + (intelli.config.default_package ? defaultPackage : '') +
             '</div></div>' + formText;
     }
-    else if ('set_default' == type) {
-        if (intelli.config.default_package != '') {
+    else if ('set_default' === type) {
+        if (intelli.config.default_package) {
             html = '<div class="url_type">' + defaultPackage + '</div>';
         }
         else {
             return false;
         }
     }
-    else if ('reset' == type) {
+    else if ('reset' === type) {
         html = '<div class="url_type">' + _t('reset_default_package') + '</div>' + formText;
     }
     html = '<form action="' + url + '" id="package_form">' + html + '</form>';
@@ -73,10 +73,10 @@ function dialog_package(type, module, url) {
     });
 }
 function setDefault(item) {
-    dialog_package('set_default', item, intelli.config.default_package);
+    dialog_package('set_default', $(item).data('url'), intelli.config.default_package);
 }
 function resetUrl(item, packageName) {
-    dialog_package('reset', item, packageName);
+    dialog_package('reset', $(item).data('url'), packageName);
 }
 
 intelli.modules = {
@@ -104,12 +104,12 @@ Ext.onReady(function () {
             remote = $this.data['remote'],
             url = $this.attr('href');
 
-        if ('packages' == type) {
-            dialog_package('install', module, url);
+        if ('packages' === type) {
+            dialog_package('install', url, module);
 
             return;
         }
-        else if ('templates' == type) {
+        else if ('templates' === type) {
             Ext.Msg.show({
                 title: _t('confirm'),
                 msg: _t('are_you_sure_install_module'),
@@ -126,7 +126,7 @@ Ext.onReady(function () {
         }
 
         $.ajax({
-            data: {name: module, type: type, remote: remote},
+            data: intelli.includeSecurityToken({name: module, type: type, remote: remote}),
             failure: intelli.modules.failure,
             type: 'POST',
             url: intelli.modules.url + type + '/' + module + '/install.json',
@@ -169,7 +169,7 @@ Ext.onReady(function () {
 
                     $.ajax(
                         {
-                            data: {name: module},
+                            data: intelli.includeSecurityToken({name: module}),
                             failure: intelli.modules.failure,
                             type: 'POST',
                             url: intelli.modules.url + type + '/' + module + '/reinstall.json',
@@ -217,7 +217,7 @@ Ext.onReady(function () {
 
                         $.ajax(
                             {
-                                data: {name: module},
+                                data: intelli.includeSecurityToken({name: module}),
                                 failure: intelli.modules.failure,
                                 type: 'POST',
                                 url: intelli.modules.url + type + '/' + module + '/uninstall.json',
@@ -247,7 +247,7 @@ Ext.onReady(function () {
         var module = $(this).data('module');
 
         $.ajax({
-            data: {action: 'install', name: record.get('file')},
+            data: intelli.includeSecurityToken({action: 'install', name: record.get('file')}),
             failure: intelli.plugins.failure,
             type: 'POST',
             url: intelli.plugins.url + 'install.json',
@@ -372,13 +372,13 @@ Ext.onReady(function () {
 var synchronizeAdminMenu = function (currentPage, extensionGroups) {
     currentPage = currentPage || 'plugins';
 
-    $.ajax({
-        data: {action: 'menu', page: currentPage},
-        success: function (response) {
+    intelli.post(intelli.config.admin_url + '/index/read.json',
+        {action: 'menu', page: currentPage},
+        function (response) {
             var $menuSection = $('#panel-center'),
                 $menus = $(response.menus);
 
-            if (typeof extensionGroups != 'undefined') {
+            if (typeof extensionGroups !== 'undefined') {
                 $.each(extensionGroups, function (i, val) {
                     $('#menu-section-' + val + ' a').append('<span class="menu-updated animated bounceIn"></span>');
                 });
@@ -386,8 +386,6 @@ var synchronizeAdminMenu = function (currentPage, extensionGroups) {
 
             $('ul', $menuSection).remove();
             $menus.appendTo($menuSection);
-        },
-        type: 'POST',
-        url: intelli.config.admin_url + '/index/read.json'
-    });
+        }
+    );
 };

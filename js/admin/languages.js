@@ -84,7 +84,7 @@ Ext.onReady(function () {
                             {
                                 url: intelli.config.admin_url + '/languages/add.json',
                                 method: 'POST',
-                                params: {prevent_csrf: $('input[name="prevent_csrf"]', '#js-add-phrase-dialog-placeholder').val()},
+                                params: intelli.includeSecurityToken({}),
                                 failure: function (form, action) {
                                     intelli.notifBox({
                                         msg: ('undefined' == typeof action.result)
@@ -316,7 +316,7 @@ Ext.onReady(function () {
                     return $(this).text();
                 }).get();
 
-                $.post(window.location.href + 'add.json', {sorting: 'save', langs: langs}, function (response) {
+                intelli.post(window.location.href + 'add.json', {sorting: 'save', langs: langs}, function (response) {
                     intelli.notifFloatBox({
                         msg: response.message,
                         type: (response.success ? 'success' : 'error'),

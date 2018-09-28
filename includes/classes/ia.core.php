@@ -127,13 +127,14 @@ final class iaCore
         $iaUsers = $this->factory('users');
         $iaUsers->authorize();
 
-        $this->_forgeryCheck();
         $this->getCustomConfig();
 
         $this->startHook('phpCoreBeforePageDefine');
 
         $this->iaView->definePage();
         $this->iaView->loadSmarty();
+
+        $this->_forgeryCheck();
 
         $this->startHook('bootstrap');
 
@@ -577,37 +578,76 @@ SQL;
 
     protected function _forgeryCheck()
     {
-        if ($_POST && $this->get('prevent_csrf') && !$this->iaView->get('nocsrf')) {
-            $referrerValid = false;
-            $tokenValid = true;//(isset($_POST[self::SECURITY_TOKEN_FORM_KEY]) && $this->getSecurityToken() == $_POST[self::SECURITY_TOKEN_FORM_KEY]);
+        if (!$_POST || !$this->get('prevent_csrf')) {
+            return;
+        }
 
-            if (isset($_SERVER['HTTP_REFERER'])) {
-                $wwwChunk = 'www.';
+        // no need to test this for the several endpoints:
+        //  - 'API' page - used to communicate with mobile apps
+        //  - IPN/IRN/other payment notification receiving endpoints
+        if ('api' == $this->iaView->name()
+            || (count($this->iaView->url) > 1 && 'ipn' == $this->iaView->url[0])) {
+            return;
+        }
 
-                $referrerDomain = explode(IA_URL_DELIMITER, $_SERVER['HTTP_REFERER']);
-                $referrerDomain = strtolower($referrerDomain[2]);
-                $referrerDomain = str_replace($wwwChunk, '', $referrerDomain);
+        $tokenValid = false;
+        $referrerValid = true;
 
-                $domain = explode(IA_URL_DELIMITER, $this->get('baseurl'));
-                $domain = strtolower($domain[2]);
-                $domain = str_replace($wwwChunk, '', $domain);
+        if (isset($_POST[self::SECURITY_TOKEN_FORM_KEY])) {
+            $tokenValid = $_POST[self::SECURITY_TOKEN_FORM_KEY] === $this->getSecurityToken();
+            unset($_POST[self::SECURITY_TOKEN_FORM_KEY]);
+        }
 
-                if ($referrerDomain === $domain) {
-                    $referrerValid = true;
-                }
-            } else {
-                $referrerValid = true; // sad, but no other way
-            }
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            $wwwChunk = 'www.';
 
-            if (!$referrerValid || !$tokenValid) {
-                header('HTTP/1.1 203'); // reply with 203 "Non-Authoritative Information" status
+            $referrerDomain = explode(IA_URL_DELIMITER, $_SERVER['HTTP_REFERER']);
+            $referrerDomain = strtolower($referrerDomain[2]);
+            $referrerDomain = str_replace($wwwChunk, '', $referrerDomain);
 
-                $this->iaView->set('nodebug', true);
-                die('Request treated as a potential CSRF attack.');
+            $domain = explode(IA_URL_DELIMITER, $this->get('baseurl'));
+            $domain = strtolower($domain[2]);
+            $domain = str_replace($wwwChunk, '', $domain);
+
+            if ($referrerDomain === $domain) {
+                $referrerValid = true;
             }
         }
 
-        unset($_POST[self::SECURITY_TOKEN_FORM_KEY]);
+        if (!$referrerValid || !$tokenValid) {
+            header('HTTP/1.1 203'); // reply with 203 "Non-Authoritative Information" status
+
+            $contentType = 'text/html';
+            $message = 'Request treated as a potential CSRF attack.';
+
+            switch ($this->iaView->getRequestType()) {
+                case iaView::REQUEST_JSON:
+                    $contentType = 'application/json';
+
+                    $output = json_encode(['result' => false, 'message' => $message]);
+
+                    break;
+
+                case iaView::REQUEST_XML:
+                    $contentType = 'text/xml';
+
+                    $xmlObject = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>');
+                    $xmlObject->addChild('result', false);
+                    $xmlObject->addChild('message', $message);
+
+                    $output = $xmlObject->asXML();
+
+                    break;
+
+                default:
+                    $output = $message;
+            }
+
+            $this->iaView->set('nodebug', true);
+
+            header('Content-Type: ' . $contentType);
+            die($output);
+        }
     }
 
     public function checkDomain()
@@ -905,7 +945,32 @@ SQL;
 
     public function getSecurityToken()
     {
-        return isset($_SESSION[self::SECURITY_TOKEN_MEMORY_KEY]) ? $_SESSION[self::SECURITY_TOKEN_MEMORY_KEY] : null;
+        if (!isset($_SESSION[self::SECURITY_TOKEN_MEMORY_KEY])) {
+            $_SESSION[self::SECURITY_TOKEN_MEMORY_KEY] = $this->_generateSecurityToken(40);
+        }
+
+        return $_SESSION[self::SECURITY_TOKEN_MEMORY_KEY];
+    }
+
+    private function _generateSecurityToken($length)
+    {
+        $result = null;
+
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $result = openssl_random_pseudo_bytes($length * 2);
+
+            if (false !== $result) {
+                $result = substr(str_replace(['/', '+', '='], '', base64_encode($result)), 0, $length);
+            }
+        }
+
+        // fallback to built-in method if cryptographic solution is unavailable
+        if (!$result) {
+            iaDebug::debug('Unable to generate strong security token', 'Notice');
+            $result = iaUtil::generateToken($length);
+        }
+
+        return $result;
     }
 
     public function fetchConfig($where = null)

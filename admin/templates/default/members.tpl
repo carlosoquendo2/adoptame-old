@@ -62,7 +62,7 @@ $(function()
         {
             if (result)
             {
-                $.post(intelli.config.admin_url + '/members/registration-email.json', { id: {$id} }, function(response)
+                intelli.post(intelli.config.admin_url + '/members/registration-email.json', { id: {$id} }, function(response)
                 {
                     intelli.notifFloatBox({ msg: response.message, type: response.result ? 'success' : 'error', autohide: true });
                     $btn.prop('disabled', true);

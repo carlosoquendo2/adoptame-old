@@ -1,0 +1,1 @@
+INSERT INTO `{prefix}hooks` (`name`,`code`,`status`,`type`,`page_type`) VALUES ('smartyAdminAfterHeadSection','{ia_add_js}intelli.securityToken = \'{$securityToken}\';{/ia_add_js}','active','smarty','admin');
