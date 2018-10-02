@@ -53,6 +53,11 @@ final class iaCore
     const SECURITY_TOKEN_MEMORY_KEY = 'csrftoken';
     const SECURITY_TOKEN_FORM_KEY = '__st';
 
+    //Constantes para el módulo de shopping
+    const GENDER_MALE = 'Male';
+    const GENDER_FEMALE = 'Female';
+    const AGE_MONTHS = 'Months';
+    const AGE_YEARS = 'Years';
 
     private static $_instance;
 

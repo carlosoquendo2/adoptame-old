@@ -56,6 +56,9 @@ class iaBackendController extends iaAbstractControllerBackend
             case 'dropzone-delete-file':
                 return $this->_dropzoneDelete();
 
+            case 'custom-action':
+                return $this->_consultCity($_POST['state_id']);
+
             default:
                 $result = [];
                 $this->_iaCore->startHook('phpAdminActionsJsonHandle',
@@ -191,5 +194,19 @@ SQL;
         }
 
         return [];
+    }
+
+    protected function _consultCity($state)
+    { 
+        if (!empty($state)) {
+            $cities = [];
+            $id = $this->_iaDb->onefield(iaDb::ID_COLUMN_SELECTION, 'state='.$state, 0, 0, 'city');
+            $names = $this->_iaDb->onefield("city", 'state='.$state, 0, 0, 'city');
+            for ($i=0; $i < count($id); $i++) {
+                $city = ["id"=>$id[$i], "city"=>$names[$i]];
+                array_push($cities, $city);
+            }
+        }
+        return $cities;
     }
 }
