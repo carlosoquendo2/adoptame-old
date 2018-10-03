@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <module type="plugin" name="adopta">
 	<title>Adopta</title>
-	<summary>Adds basic shopping cart functionality to manage products and sell them</summary>
+	<summary>Adds basic adoption functionality to manage products and sell them</summary>
 	<author>Intelliants LLC</author>
 	<contributor>Intelliants LLC</contributor>
 	<version>4.1.0</version>
@@ -9,17 +9,17 @@
 	<compatibility>4.1.0</compatibility>
 
 	<actions>
-		<action name="pet_categs" url="shopping-cart/categories/" icon="list-2" order="1" pages="pet_items"><![CDATA[]]></action>
-		<action name="pet_items" url="shopping-cart/items/" icon="list" order="2" pages="pet_categs"><![CDATA[]]></action>
-		<action name="cart_categ_add" url="shopping-cart/categories/add/" icon="folder-plus" order="3" pages="pet_categs"><![CDATA[]]></action>
-		<action name="cart_item_add" url="shopping-cart/items/add/" icon="plus-alt" order="3" pages="pet_items"><![CDATA[]]></action>
+		<action name="pet_categs" url="adopta/categories/" icon="list-2" order="1" pages="pet_items"><![CDATA[]]></action>
+		<action name="pet_items" url="adopta/pets/" icon="list" order="2" pages="pet_categs"><![CDATA[]]></action>
+		<action name="pet_categ_add" url="adopta/categories/add/" icon="folder-plus" order="3" pages="pet_categs"><![CDATA[]]></action>
+		<action name="pet_item_add" url="adopta/pets/add/" icon="plus-alt" order="3" pages="pet_items"><![CDATA[]]></action>
 	</actions>
 
 	<adminpages>
 		<page group="content" menus="menu" order="105">Adopta</page>
 
-		<page name="pet_categs" group="content" url="shopping-cart/categories/" filename="categories" menus="menu" order="115">Categories</page>
-		<page name="pet_items" group="content" url="shopping-cart/items/" filename="items" menus="menu" order="120">Items</page>
+		<page name="pet_categs" group="content" url="adopta/categories/" filename="categories" menus="menu" order="115">Pet categories</page>
+		<page name="pet_items" group="content" url="adopta/pets/" filename="pets" menus="menu" order="120">Pet items</page>
 	</adminpages>
 
 	<pages>
@@ -27,26 +27,28 @@
 	</pages>
 
 	<phrases>
-		<phrase category="admin" key="pet_categs">Cart categories</phrase>
-		<phrase category="admin" key="cart_categ_add">Add category</phrase>
-		<phrase category="admin" key="cart_categ_edit">Edit category</phrase>
-		<phrase category="admin" key="cart_incorrect_categ">Category is not selected.</phrase>
-		<phrase category="admin" key="cart_item_add">Add item</phrase>
-		<phrase category="admin" key="cart_item_edit">Edit item</phrase>
-		<phrase category="admin" key="pet_items">Cart items</phrase>
-		<phrase category="admin" key="cart_item_added">Cart item is added.</phrase>
-		<phrase category="admin" key="cart_item_deleted">Cart item is removed.</phrase>
-		<phrase category="admin" key="pet_items_deleted">Cart items are removed.</phrase>
-		<phrase category="admin" key="cart_categ_added">Cart category is added.</phrase>
-		<phrase category="admin" key="cart_categ_deleted">Cart category is removed.</phrase>
-		<phrase category="admin" key="pet_categs_deleted">Cart categories are removed.</phrase>
-		<phrase category="admin" key="cart_are_you_sure_to_delete_selected_categ">Are you sure to delete selected category?</phrase>
-		<phrase category="admin" key="cart_are_you_sure_to_delete_selected_categs">Are you sure to delete selected categories?</phrase>
-		<phrase category="admin" key="error_cart_item_number_days">Wrong days number.</phrase>
+		<phrase category="admin" key="pet_categs">Pet categories</phrase>
+		<phrase category="admin" key="pet_categ_add">Add category</phrase>
+		<phrase category="admin" key="pet_categ_edit">Edit category</phrase>
+		<phrase category="admin" key="pet_incorrect_categ">Category is not selected.</phrase>
+		<phrase category="admin" key="pet_item_add">Add pet item</phrase>
+		<phrase category="admin" key="pet_item_edit">Edit pet item</phrase>
+		<phrase category="admin" key="pet_items">Pet items</phrase>
+		<phrase category="admin" key="pet_item_added">Pet item is added.</phrase>
+		<phrase category="admin" key="pet_item_deleted">Pet item is removed.</phrase>
+		<phrase category="admin" key="pet_items_deleted">Pet items are removed.</phrase>
+		<phrase category="admin" key="pet_categ_added">Pet category is added.</phrase>
+		<phrase category="admin" key="pet_categ_deleted">Pet category is removed.</phrase>
+		<phrase category="admin" key="pet_categs_deleted">Pet categories are removed.</phrase>
+		<phrase category="admin" key="pet_are_you_sure_to_delete_selected_categ">Are you sure to delete selected pet category?</phrase>
+		<phrase category="admin" key="pet_are_you_sure_to_delete_selected_categs">Are you sure to delete selected pet categories?</phrase>
+		<phrase category="admin" key="error_pet_item_number_days">Wrong days number.</phrase>
 		<phrase category="admin" key="products">products</phrase>
 		<phrase category="admin" key="adopta">Adopta</phrase>
 		<phrase category="admin" key="wrong_categ">Wrong Category selected.</phrase>
-
+	
+		<phrase category="common" key="published_by">Published by</phrase>
+		<phrase category="common" key="request_adoption">Request adoption</phrase>
 		<phrase category="frontend" key="no_items">No items</phrase>
 		<phrase category="frontend" key="checkout">Checkout</phrase>
 		<phrase category="frontend" key="none">None</phrase>
@@ -60,8 +62,8 @@
 	</phrases>
 
 	<configgroup name="adopta">Adopta</configgroup>
-	<config group="adopta" name="shopping_cart_plugin" type="divider">General</config>
-	<config group="adopta" name="shopping_cart_popup" type="radio" values="1,0" description="Enable popup box on Order page">1</config>
+	<config group="adopta" name="adoption_plugin" type="divider">General</config>
+	<config group="adopta" name="adoption_popup" type="radio" values="1,0" description="Enable popup box on Order page">1</config>
 
 	<hooks>
 		<hook name="adminDashboardStatistics" page_type="admin" pages="index"><![CDATA[$items['adopta:cartitem'] = 'plugin';]]></hook>
@@ -87,15 +89,15 @@ CREATE TABLE `{prefix}pet_items`(
 	`days` int(6) unsigned NOT NULL,
 	`cost` decimal(8,2) unsigned NOT NULL,
 	`order` int(4) NOT NULL,
-	`status` enum('active', 'inactive') NOT NULL default 'active',
-	`name` VARCHAR(20) NOT NULL AFTER `id`,
-	`member_id` INT(11) UNSIGNED NULL AFTER`status`,
-	`age` INT(3) NULL AFTER `member_id`,
-	`age_type` ENUM('months','years') NULL DEFAULT 'months' AFTER `age`,
-	`gender` ENUM('male','female') NULL DEFAULT 'male' AFTER`age_type`,
-	`state_id` INT(8) NULL AFTER `gender`,
-	`city_id` INT(9)NULL AFTER `state_id`,
-	`description` TEXT NOT NULL AFTER`city_id`
+	`status` enum('active', 'inactive') NOT NULL,
+	`name` VARCHAR(20) NOT NULL,
+	`member_id` int(11) unsigned null,
+	`age` int(3) NULL,
+	`age_type` enum('months','years') NULL DEFAULT 'months',
+	`gender` enum('male','female') NULL DEFAULT 'male',
+	`state_id` int(8) NULL,
+	`city_id` int(9) NULL,
+	`description` text NOT NULL
 ) {mysql_version};
 			]]>
 		</sql>

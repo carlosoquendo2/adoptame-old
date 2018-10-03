@@ -26,35 +26,35 @@
 
 class iaBackendController extends iaAbstractControllerModuleBackend
 {
-	protected $_name = 'items';
+	protected $_name = 'pets';
 
-	protected $_helperName = 'cartitem';
+	protected $_helperName = 'petitem';
 
 	protected $_moduleName = 'adopta';
 
 	protected $_gridColumns = ['id', 'order', 'status', 'update' => 1, 'delete' => 1];
 
-	protected $_phraseAddSuccess = 'cart_item_added';
-	protected $_phraseGridEntryDeleted = 'cart_item_deleted';
+	protected $_phraseAddSuccess = 'pet_item_added';
+	protected $_phraseGridEntryDeleted = 'pet_item_deleted';
 	protected $_phraseGridEntriesDeleted = 'pet_items_deleted';
 
 
 	public function init()
 	{
-		$this->_path = IA_ADMIN_URL . 'shopping-cart/' . $this->getName() . '/';
-		$this->_template = 'items';
+		$this->_path = IA_ADMIN_URL . 'adopta/' . $this->getName() . '/';
+		$this->_template = 'pets';
 
-		$iaCartItem = $this->_iaCore->factoryPlugin($this->getModuleName(), iaCore::ADMIN, $this->_helperName);
+		$iaPetItem = $this->_iaCore->factoryPlugin($this->getModuleName(), iaCore::ADMIN, $this->_helperName);
 
-		$this->setHelper($iaCartItem);
-		$this->setTable($iaCartItem::getTable());
+		$this->setHelper($iaPetItem);
+		$this->setTable($iaPetItem::getTable());
 	}
 
 	protected function _setPageTitle(&$iaView, array $entryData, $action)
 	{
 		if (in_array($iaView->get('action'), [iaCore::ACTION_ADD, iaCore::ACTION_EDIT]))
 		{
-			$iaView->title(iaLanguage::get('cart_item_' . $iaView->get('action')));
+			$iaView->title(iaLanguage::get('pet_item_' . $iaView->get('action')));
 		}
 	}
 
@@ -63,14 +63,14 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 		$currentLanguage = $this->_iaCore->iaView->language;
 
 		$this->_iaDb->setTable(iaLanguage::getTable());
-		$titles = $this->_iaDb->keyvalue(['key', 'value'], "`key` LIKE('cart_item_title_%') AND `code` = '$currentLanguage'");
-		$descriptions = $this->_iaDb->keyvalue(['key', 'value'], "`key` LIKE('cart_item_description_%') AND `code` = '$currentLanguage'");
+		$titles = $this->_iaDb->keyvalue(['key', 'value'], "`key` LIKE('pet_item_title_%') AND `code` = '$currentLanguage'");
+		$descriptions = $this->_iaDb->keyvalue(['key', 'value'], "`key` LIKE('pet_item_description_%') AND `code` = '$currentLanguage'");
 		$this->_iaDb->resetTable();
 
 		foreach ($entries as &$entry)
 		{
-			$entry['title'] = isset($titles["cart_item_title_{$entry['id']}"]) ? $titles["cart_item_title_{$entry['id']}"] : iaLanguage::get('empty');
-			$entry['description'] = isset($descriptions["cart_item_description_{$entry['id']}"]) ? $descriptions["cart_item_description_{$entry['id']}"] : iaLanguage::get('empty');
+			$entry['title'] = isset($titles["pet_item_title_{$entry['id']}"]) ? $titles["pet_item_title_{$entry['id']}"] : iaLanguage::get('empty');
+			$entry['description'] = isset($descriptions["pet_item_description_{$entry['id']}"]) ? $descriptions["pet_item_description_{$entry['id']}"] : iaLanguage::get('empty');
 		}
 	}
 
@@ -83,7 +83,7 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 	{
 		if (empty($data['cid']))
 		{
-			$this->addMessage('cart_incorrect_categ');
+			$this->addMessage('pet_incorrect_categ');
 		}
 
 		$entry['cid'] = $data['cid'];
@@ -111,8 +111,8 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 			}
 		}
 
-		$entry['name'] = "cart_item_title_".$this->_entryId;
-		$entry['description'] = "cart_item_description_".$this->_entryId;
+		$entry['name'] = "pet_item_title_".$this->_entryId;
+		$entry['description'] = "pet_item_description_".$this->_entryId;
 		$entry['status'] = $data['status'];
 		$entry['gender'] = $data['gender'];
 		$entry['age'] = $data['age'];
@@ -160,8 +160,8 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 
 		foreach ($this->_iaCore->languages as $code => $title)
 		{
-			iaLanguage::addPhrase('cart_item_title_' . $id, $data['title'][$code], $code, $this->getModuleName());
-			iaLanguage::addPhrase('cart_item_description_' . $id, $data['description'][$code], $code, $this->getModuleName());
+			iaLanguage::addPhrase('pet_item_title_' . $id, $data['title'][$code], $code, $this->getModuleName());
+			iaLanguage::addPhrase('pet_item_description_' . $id, $data['description'][$code], $code, $this->getModuleName());
 		}
 	}
 
@@ -181,15 +181,18 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 			$state = 0;
 		}
 		$cities = $this->_iaDb->onefield(iaDb::ID_COLUMN_SELECTION, 'state='.$state, 0, 0, 'city');
-		$cities || $iaView->setMessages(iaLanguage::get('cities_not_found'));
+		if($state != null){
+			$cities || $iaView->setMessages(iaLanguage::get('cities_not_found'));
+		}
 
 		$owner = empty($entryData['member_id']) ? iaUsers::getIdentity(true) : $iaUsers->getInfo($entryData['member_id']);
-        $entryData['owner'] = $owner['fullname'] . " ({$owner['email']})";
+		$entryData['owner'] = $owner['fullname'] . " ({$owner['email']})";
+		$entryData['member_id'] = $owner['id'];
 
 		$id = $this->getEntryId();
 
-		$entryData['title'] = $this->_iaDb->keyvalue('`code`, `value`', "`key`='cart_item_title_{$id}'", iaLanguage::getTable());
-		$entryData['description'] = $this->_iaDb->keyvalue('`code`, `value`', "`key`='cart_item_description_{$id}'", iaLanguage::getTable());
+		$entryData['title'] = $this->_iaDb->keyvalue('`code`, `value`', "`key`='pet_item_title_{$id}'", iaLanguage::getTable());
+		$entryData['description'] = $this->_iaDb->keyvalue('`code`, `value`', "`key`='pet_item_description_{$id}'", iaLanguage::getTable());
 		
 		$iaView->assign('categs', $categs);
 		$iaView->assign('states', $states);

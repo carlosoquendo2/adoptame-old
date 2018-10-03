@@ -29,25 +29,71 @@ if (iaView::REQUEST_HTML == $iaView->getRequestType())
 	// $iaView->title(iaLanguage::get('order'));
 	// iaBreadcrumb::replaceEnd(iaLanguage::get('order'), IA_SELF);
 
+	//Obtener lista de todos las categorías activas
 	$all_items = $iaDb->assoc(iaDb::ALL_COLUMNS_SELECTION, iaDb::convertIds(iaCore::STATUS_ACTIVE, 'status'), 'pet_categs');
+
+	//Obteber todas las mascotas activas ordenadas por categoría
+	$all_pets_actives = $iaDb->assoc(iaDb::ALL_COLUMNS_SELECTION, iaDb::convertIds(iaCore::STATUS_ACTIVE, 'status'), 'pet_items');
 
 	foreach ($all_items as $key => $categ)
 	{
-		$all_items[$key]['items'] = $iaDb->assoc(iaDb::ALL_COLUMNS_SELECTION, "`cid` = {$key} && `status` = 'active'", 'pet_items');
+		//$all_items[$key]['items'] = $iaDb->assoc(iaDb::ALL_COLUMNS_SELECTION, "`cid` = {$key} && `status` = 'active'", 'pet_items');
+		if ($all_pets_actives != null) {
+			$count = 0;
+			foreach ($all_pets_actives as $id => $pet) {
+				if ($pet['cid'] === "$key") {
+					$count++;
+					$all_items[$key]['items'][$id] = $pet;
+				}
+			}
+		}
 	}
 	
-	for ($i=1; $i <= count($all_items); $i++) {
-		$count = 0;
-		foreach ($all_items[$i]['items'] as $key => $value) {
-			$count++;
-			$state = $value['state_id'];
-			$city = $value['city_id'];
-			$owner = $value['member_id'];
+	if($all_items != null){
+		//variable con condicional de consulta de estado
+		$states_condition = 'id IN ()';
+		//variable con condicional de consulta de ciudades
+		$cities_condition = 'id IN ()';
+		//variable con condicional de consulta de miembro
+		$owners_condition = 'id IN ()';
 
-			$all_items[$i]['items'][$count]['state'] = $iaDb->onefield('state', 'id='.$state, 0, 0, 'state');
-			$all_items[$i]['items'][$count]['city'] = $iaDb->onefield('city', 'id='.$city, 0, 0, 'city');
-			$all_items[$i]['items'][$count]['owner_mail'] = $iaDb->onefield('email', 'id='.$owner, 0, 0, 'members');
-			$all_items[$i]['items'][$count]['owner_name'] = $iaDb->onefield('username', 'id='.$owner, 0, 0, 'members');
+		for ($i=1; $i <= count($all_items); $i++) {
+			$count = 0;
+			foreach ($all_items[$i]['items'] as $key => $value) {
+				$count++;
+				$state = $value['state_id'];
+				$city = $value['city_id'];
+				$owner = $value['member_id'];
+				if ($count == 1) {
+					$states_condition = str_replace(')',$state.')',$states_condition);
+					$cities_condition = str_replace(')',$city.')',$cities_condition);
+					$owners_condition = str_replace(')',$owner.')',$owners_condition);
+				}else {
+					$states_condition = str_replace(')',','.$state.')',$states_condition);
+					$cities_condition = str_replace(')',','.$city.')',$cities_condition);
+					$owners_condition = str_replace(')',','.$owner.')',$owners_condition);
+				}
+			}
+		}
+
+		
+		//variable con la lista de estados consultados
+		$states = $iaDb->assoc('id, state', $states_condition, 'state');
+		//variable con la lista de ciudades consultadas
+		$cities = $iaDb->assoc('id, city', $cities_condition, 'city');
+		//variable con la lista de nombres de usuarios de los miembros consultados
+		$owners = $iaDb->assoc('id, email, username', $owners_condition, 'members');
+
+		for ($i=1; $i <= count($all_items); $i++) {
+			$count = 0;
+			foreach ($all_items[$i]['items'] as $key => $value) {
+				$count++;
+				
+				$all_items[$i]['items'][$key]['state'] = array_column($states, 'state', $value['state_id']);
+				$all_items[$i]['items'][$key]['city'] = array_column($cities, 'city', $value['city_id']);
+				$all_items[$i]['items'][$key]['owner_mail'] = array_column($owners, 'email', $value['member_id']);
+				$all_items[$i]['items'][$key]['owner_name'] = array_column($owners, 'username', $value['member_id']);
+			}
 		}
 	}
 
@@ -64,7 +110,7 @@ if (iaView::REQUEST_HTML == $iaView->getRequestType())
 		}
 
 		$iaView->title(iaLanguage::get('products_in_cart'));
-		iaBreadcrumb::add(iaLanguage::get('order'), IA_URL . 'items/');
+		iaBreadcrumb::add(iaLanguage::get('order'), IA_URL . 'adopta/');
 		iaBreadcrumb::replaceEnd(iaLanguage::get('products_in_cart'), IA_SELF);
 		$iaView->assign('checkout', 1);
 
@@ -76,7 +122,7 @@ if (iaView::REQUEST_HTML == $iaView->getRequestType())
 			if ($product != '0')
 			{
 				$selected_products[$product] = $all_items[$categ]['items'][$product];
-				$title[] = iaLanguage::get('cart_item_title_' . $product) . ' - ' . iaLanguage::get('cart_categ_title_' . $categ);
+				$title[] = iaLanguage::get('pet_item_title_' . $product) . ' - ' . iaLanguage::get('pet_categ_title_' . $categ);
 			}
 		}
 

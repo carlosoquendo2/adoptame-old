@@ -7,8 +7,8 @@
 						{if $categ.image}
 							<div class="cart-categ__image">{ia_image file=$categ.image type='thumbnail' class='img-responsive'}</div>
 						{/if}
-						<h3>{lang key="cart_categ_title_{$cid}"}</h3>
-						<p>{lang key="cart_categ_description_{$cid}"}</p>
+						<h3>{lang key="pet_categ_title_{$cid}"}</h3>
+						<p>{lang key="pet_categ_description_{$cid}"}</p>
 					</div>
 
 					<div class="cart-categ__content">
@@ -29,9 +29,9 @@
 									</thead>
 									<tbody>
 									{foreach $categ.items as $id => $item}
-										{assign var='description' value="{lang key="cart_item_description_{$id}"}"}
+										{assign var='description' value="{lang key="pet_item_description_{$id}"}"}
 										<tr>
-											<td>{lang key="cart_item_title_$id"}</td>
+											<td>{lang key="pet_item_title_$id"}</td>
 											<td>{$item.age} {$item.age_type}</td>
 											<td>{$item.state[0]}</td>
 											<td>{$item.city[0]}</td>

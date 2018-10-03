@@ -24,7 +24,7 @@
  *
  ******************************************************************************/
 
-class iaCartitem extends abstractModuleAdmin
+class iaPetitem extends abstractModuleAdmin
 {
 	protected static $_table = 'pet_items';
 
@@ -49,7 +49,7 @@ class iaCartitem extends abstractModuleAdmin
 			'caption' => iaLanguage::get('adopta'),
 			'rows' => $rows,
 			'total' => $total,
-			'url' => 'shopping-cart/items/'
+			'url' => 'adopta/pets/'
 		];
 	}
 
@@ -72,8 +72,8 @@ class iaCartitem extends abstractModuleAdmin
 
 			if ($result)
 			{
-				iaLanguage::delete('cart_item_title_' . $id);
-				iaLanguage::delete('cart_item_description_' . $id);
+				iaLanguage::delete('pet_item_title_' . $id);
+				iaLanguage::delete('pet_item_description_' . $id);
 
 				$this->iaCore->factory('log')->write(iaLog::ACTION_DELETE, [
 					'module' => 'blog',

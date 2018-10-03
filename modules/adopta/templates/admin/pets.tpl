@@ -15,7 +15,7 @@
 					<select name="cid">
 						<option value="">{lang key='_select_'}</option>
 						{foreach $categs as $category}
-							<option value="{$category}" {if isset($item.cid) && $item.cid == $category} selected="selected"{/if} {if isset($smarty.post.cid) && $category == $smarty.post.cid}selected{/if}>{lang key="cart_categ_title_"|cat:$category}</option>
+							<option value="{$category}" {if isset($item.cid) && $item.cid == $category} selected="selected"{/if} {if isset($smarty.post.cid) && $category == $smarty.post.cid}selected{/if}>{lang key="pet_categ_title_"|cat:$category}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -159,7 +159,7 @@
 	</div>
 </form>
 
-{ia_print_js files='ckeditor/ckeditor, _IA_URL_modules/adopta/js/admin/items'}
+{ia_print_js files='ckeditor/ckeditor, _IA_URL_modules/adopta/js/admin/pets'}
 
 {ia_add_js}
 	//Updating owner
@@ -175,10 +175,10 @@
                 data: { q: query, action: 'assign-owner' },
                 success: function(response)
                 {
-                    objects = items = [];
+                    objects = pets = [];
                     $.each(response, function(i, object)
                     {
-                        items[object.fullname] = object;
+                        pets[object.fullname] = object;
                         objects.push(object.fullname);
                     });
 
@@ -188,7 +188,7 @@
         },
         updater: function(item)
         {
-            $('#member-id').val(items[item].id);
+            $('#member-id').val(pets[item].id);
             return item;
         },
         matcher: function()
