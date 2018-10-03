@@ -34,14 +34,14 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 
 	protected $_gridColumns = ['id', 'order', 'image', 'status'];
 
-	protected $_phraseAddSuccess = 'cart_categ_added';
-	protected $_phraseGridEntryDeleted = 'cart_categ_deleted';
+	protected $_phraseAddSuccess = 'pet_categ_added';
+	protected $_phraseGridEntryDeleted = 'pet_categ_deleted';
 	protected $_phraseGridEntriesDeleted = 'pet_categs_deleted';
 
 
 	public function init()
 	{
-		$this->_path = IA_ADMIN_URL . 'shopping-cart/' . $this->getName() . '/';
+		$this->_path = IA_ADMIN_URL . 'adopta/' . $this->getName() . '/';
 		$this->_template = 'categories';
 	}
 
@@ -49,7 +49,7 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 	{
 		if (in_array($action, [iaCore::ACTION_ADD, iaCore::ACTION_EDIT]))
 		{
-			$iaView->title(iaLanguage::get('cart_categ_' . $iaView->get('action')));
+			$iaView->title(iaLanguage::get('pet_categ_' . $iaView->get('action')));
 		}
 	}
 
@@ -58,14 +58,14 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 		$currentLanguage = $this->_iaCore->iaView->language;
 
 		$this->_iaDb->setTable(iaLanguage::getTable());
-		$titles = $this->_iaDb->keyvalue(['key', 'value'], "`key` LIKE('cart_categ_title_%') && `code` = '$currentLanguage'");
-		$descriptions = $this->_iaDb->keyvalue(['key', 'value'], "`key` LIKE('cart_categ_description_%') && `code` = '$currentLanguage'");
+		$titles = $this->_iaDb->keyvalue(['key', 'value'], "`key` LIKE('pet_categ_title_%') && `code` = '$currentLanguage'");
+		$descriptions = $this->_iaDb->keyvalue(['key', 'value'], "`key` LIKE('pet_categ_description_%') && `code` = '$currentLanguage'");
 		$this->_iaDb->resetTable();
 
 		foreach ($entries as &$entry)
 		{
-			$entry['title'] = isset($titles["cart_categ_title_{$entry['id']}"]) ? $titles["cart_categ_title_{$entry['id']}"] : iaLanguage::get('empty');
-			$entry['description'] = isset($descriptions["cart_categ_description_{$entry['id']}"]) ? $descriptions["cart_categ_description_{$entry['id']}"] : iaLanguage::get('empty');
+			$entry['title'] = isset($titles["pet_categ_title_{$entry['id']}"]) ? $titles["pet_categ_title_{$entry['id']}"] : iaLanguage::get('empty');
+			$entry['description'] = isset($descriptions["pet_categ_description_{$entry['id']}"]) ? $descriptions["pet_categ_description_{$entry['id']}"] : iaLanguage::get('empty');
 		}
 	}
 
@@ -73,8 +73,8 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 	{
 		$id = $this->getEntryId();
 	
-		$entryData['title'] = $this->_iaDb->keyvalue('`code`, `value`', "`key`='cart_categ_title_{$id}'", iaLanguage::getTable());
-		$entryData['description'] = $this->_iaDb->keyvalue('`code`, `value`', "`key`='cart_categ_description_{$id}'", iaLanguage::getTable());
+		$entryData['title'] = $this->_iaDb->keyvalue('`code`, `value`', "`key`='pet_categ_title_{$id}'", iaLanguage::getTable());
+		$entryData['description'] = $this->_iaDb->keyvalue('`code`, `value`', "`key`='pet_categ_description_{$id}'", iaLanguage::getTable());
 	}
 
 	protected function _entryDelete($entryId)
@@ -151,8 +151,8 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 
 		foreach ($this->_iaCore->languages as $code => $title)
 		{
-			iaLanguage::addPhrase('cart_categ_title_' . $id, $data['title'][$code], $code, $this->getModuleName());
-			iaLanguage::addPhrase('cart_categ_description_' . $id, $data['description'][$code], $code, $this->getModuleName());
+			iaLanguage::addPhrase('pet_categ_title_' . $id, $data['title'][$code], $code, $this->getModuleName());
+			iaLanguage::addPhrase('pet_categ_description_' . $id, $data['description'][$code], $code, $this->getModuleName());
 		}
 	}
 }

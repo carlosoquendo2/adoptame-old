@@ -15,7 +15,7 @@
 					<select name="cid">
 						<option value="">{lang key='_select_'}</option>
 						{foreach $categs as $category}
-							<option value="{$category}" {if isset($item.cid) && $item.cid == $category} selected="selected"{/if} {if isset($smarty.post.cid) && $category == $smarty.post.cid}selected{/if}>{lang key="cart_categ_title_"|cat:$category}</option>
+							<option value="{$category}" {if isset($item.cid) && $item.cid == $category} selected="selected"{/if} {if isset($smarty.post.cid) && $category == $smarty.post.cid}selected{/if}>{lang key="pet_categ_title_"|cat:$category}</option>
 						{/foreach}
 					</select>
 				</div>

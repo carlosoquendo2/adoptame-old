@@ -13,8 +13,8 @@ Ext.onReady(function()
 				'delete'
 			],
 			texts: {
-				delete_multiple: _t('cart_are_you_sure_to_delete_selected_categs'),
-				delete_single: _t('cart_are_you_sure_to_delete_selected_categ')
+				delete_multiple: _t('pet_are_you_sure_to_delete_selected_categs'),
+				delete_single: _t('pet_are_you_sure_to_delete_selected_categ')
 			}
 		});
 	}

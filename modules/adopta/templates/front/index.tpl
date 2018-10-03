@@ -7,8 +7,8 @@
 						{if $categ.image}
 							<div class="cart-categ__image">{ia_image file=$categ.image type='thumbnail' class='img-responsive'}</div>
 						{/if}
-						<h3>{lang key="cart_categ_title_{$cid}"}</h3>
-						<p>{lang key="cart_categ_description_{$cid}"}</p>
+						<h3>{lang key="pet_categ_title_{$cid}"}</h3>
+						<p>{lang key="pet_categ_description_{$cid}"}</p>
 					</div>
 
 					<div class="cart-categ__content">
@@ -18,7 +18,7 @@
 							<div class="cart-categ__items">
 								<div class="row">
 									{foreach $categ.items as $id => $item}
-										{assign var='description' value="{lang key="cart_item_description_{$id}"}"}
+										{assign var='description' value="{lang key="pet_item_description_{$id}"}"}
 
 										<div class="ia-item">
 											{if $item.image}
@@ -29,7 +29,7 @@
 											</div>
 											{/if}
 											<div class="ia-item__content">
-											<h4 class="ia-item__title">{lang key="cart_item_title_{$id}"}</h4>
+											<h4 class="ia-item__title">{lang key="pet_item_title_{$id}"}</h4>
 											
 											{if $item.age}
 												<span class="fa fa-paw"></span> {$item.age} {$item.age_type}
@@ -48,7 +48,7 @@
 												</br>
 											{/if}
 
-											{if $core.config.shopping_cart_popup}
+											{if $core.config.adoption_popup}
 												<div class="ia-item__body">
 												{$description|strip_tags|truncate:150:'...':true}
 												</div>
@@ -60,7 +60,7 @@
 												<input type="radio" class="js-cart-item" id="cart-item-{$id}" name="pet_items[{$cid}]" value="{$id}" data-cost="{$item.cost}" data-categ="{$cid}"><span>{lang key='request_adoption'}</span>
 											</label>
 
-											{if $core.config.shopping_cart_popup}
+											{if $core.config.adoption_popup}
 												<button type="button" class="btn btn-primary cart-more-info" data-toggle="modal" data-target="#modal_{$id}">{lang key='more'}</button>
 
 												<div class="modal fade" id="modal_{$id}" tabindex="-1" role="dialog">
@@ -70,11 +70,11 @@
 																<div class="media">
 																	{if $item.image}
 																		<div class="media-left">
-																			<a href="{ia_image file=$item.image url=true type='large'}" rel="ia_lightbox[{lang key="cart_item_title_{$id}"}]">{ia_image file=$item.image type='thumbnail' class='media-object' width=120}</a>
+																			<a href="{ia_image file=$item.image url=true type='large'}" rel="ia_lightbox[{lang key="pet_item_title_{$id}"}]">{ia_image file=$item.image type='thumbnail' class='media-object' width=120}</a>
 																		</div>
 																	{/if}
 																	<div class="media-body">
-																		<h4 class="media-heading">{lang key="cart_item_title_{$id}"}</h4>
+																		<h4 class="media-heading">{lang key="pet_item_title_{$id}"}</h4>
 																		{if $item.age}
 																			<span class="fa fa-paw"></span> {$item.age} {$item.age_type}
 																			</br>

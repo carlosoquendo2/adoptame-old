@@ -64,7 +64,7 @@ if (iaView::REQUEST_HTML == $iaView->getRequestType())
 		}
 
 		$iaView->title(iaLanguage::get('products_in_cart'));
-		iaBreadcrumb::add(iaLanguage::get('order'), IA_URL . 'items/');
+		iaBreadcrumb::add(iaLanguage::get('order'), IA_URL . 'adopta/');
 		iaBreadcrumb::replaceEnd(iaLanguage::get('products_in_cart'), IA_SELF);
 		$iaView->assign('checkout', 1);
 
@@ -76,7 +76,7 @@ if (iaView::REQUEST_HTML == $iaView->getRequestType())
 			if ($product != '0')
 			{
 				$selected_products[$product] = $all_items[$categ]['items'][$product];
-				$title[] = iaLanguage::get('cart_item_title_' . $product) . ' - ' . iaLanguage::get('cart_categ_title_' . $categ);
+				$title[] = iaLanguage::get('pet_item_title_' . $product) . ' - ' . iaLanguage::get('pet_categ_title_' . $categ);
 			}
 		}
 
