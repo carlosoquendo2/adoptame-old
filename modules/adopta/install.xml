@@ -47,7 +47,10 @@
 		<phrase category="admin" key="adopta">Adopta</phrase>
 		<phrase category="admin" key="wrong_categ">Wrong Category selected.</phrase>
 	
+<<<<<<< HEAD
 		<phrase category="common" key="published_by">Published by</phrase>
+=======
+>>>>>>> 0b3ef90b060f3dbc38b3a9cf62a3f81711df7d54
 		<phrase category="common" key="request_adoption">Request adoption</phrase>
 		<phrase category="frontend" key="no_items">No items</phrase>
 		<phrase category="frontend" key="checkout">Checkout</phrase>
