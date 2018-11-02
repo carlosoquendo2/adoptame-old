@@ -40,7 +40,7 @@
 												<td>{$item.city}</td>
 												<td>{$item.gender}</td>
 												<td>{$item.status}</td>
-												<td><a href="{$urlEdit}+{$item.id}"><span class="fa fa-edit"></span></a></td>
+												<td><a href="{$urlEdit}{$id}"><span class="fa fa-edit"></span></a></td>
 												<td><span class="fa fa-trash"></span></td>
 											</tr>
 										{/foreach}
