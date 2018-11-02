@@ -39,10 +39,8 @@ if (iaView::REQUEST_HTML == $iaView->getRequestType())
 	{
 		//$all_items[$key]['items'] = $iaDb->assoc(iaDb::ALL_COLUMNS_SELECTION, "`cid` = {$key} && `status` = 'active'", 'pet_items');
 		if ($all_pets_actives != null) {
-			$count = 0;
 			foreach ($all_pets_actives as $id => $pet) {
 				if ($pet['cid'] === "$key") {
-					$count++;
 					$all_items[$key]['items'][$id] = $pet;
 				}
 			}
@@ -57,8 +55,8 @@ if (iaView::REQUEST_HTML == $iaView->getRequestType())
 		//variable con condicional de consulta de miembro
 		$owners_condition = 'id IN ()';
 
+		$count = 0;
 		for ($i=1; $i <= count($all_items); $i++) {
-			$count = 0;
 			foreach ($all_items[$i]['items'] as $key => $value) {
 				$count++;
 				$state = $value['state_id'];
@@ -85,14 +83,11 @@ if (iaView::REQUEST_HTML == $iaView->getRequestType())
 		$owners = $iaDb->assoc('id, email, username', $owners_condition, 'members');
 
 		for ($i=1; $i <= count($all_items); $i++) {
-			$count = 0;
 			foreach ($all_items[$i]['items'] as $key => $value) {
-				$count++;
-				
-				$all_items[$i]['items'][$key]['state'] = array_column($states, 'state', $value['state_id']);
-				$all_items[$i]['items'][$key]['city'] = array_column($cities, 'city', $value['city_id']);
-				$all_items[$i]['items'][$key]['owner_mail'] = array_column($owners, 'email', $value['member_id']);
-				$all_items[$i]['items'][$key]['owner_name'] = array_column($owners, 'username', $value['member_id']);
+				$all_items[$i]['items'][$key]['state'] = $states[$value['state_id']]['state'];
+				$all_items[$i]['items'][$key]['city'] = $cities[$value['city_id']]['city'];
+				$all_items[$i]['items'][$key]['owner_mail'] = $owners[$value['member_id']]['email'];
+				$all_items[$i]['items'][$key]['owner_name'] = $owners[$value['member_id']]['username'];
 			}
 		}
 	}

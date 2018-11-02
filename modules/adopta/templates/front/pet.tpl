@@ -159,7 +159,9 @@
 	</div>
 </form>
 
-{ia_print_js files='ckeditor/ckeditor, _IA_URL_modules/adopta/js/admin/items'}
+{ia_print_js files='ckeditor/ckeditor, _IA_URL_modules/adopta/js/admin/pets'}
+{ia_add_media files='js:_IA_URL_modules/shopping_cart/js/frontend/order, css:_IA_URL_modules/shopping_cart/templates/front/css/style'}
+{ia_add_media files='js:_IA_URL_modules/adopta/js/frontend/order, css:_IA_URL_modules/adopta/templates/front/css/style'}
 
 {ia_add_js}
 	//Updating owner
@@ -175,10 +177,10 @@
                 data: { q: query, action: 'assign-owner' },
                 success: function(response)
                 {
-                    objects = items = [];
+                    objects = pets = [];
                     $.each(response, function(i, object)
                     {
-                        items[object.fullname] = object;
+                        pets[object.fullname] = object;
                         objects.push(object.fullname);
                     });
 
@@ -188,7 +190,7 @@
         },
         updater: function(item)
         {
-            $('#member-id').val(items[item].id);
+            $('#member-id').val(pets[item].id);
             return item;
         },
         matcher: function()

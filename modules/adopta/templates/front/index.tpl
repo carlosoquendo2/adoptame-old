@@ -1,4 +1,6 @@
 {if !empty($all_items)}
+
+<div class="tab-content">
 	<form method="post" id="cart-form">
 		<div class="cart">
 			{foreach $all_items as $cid => $categ}
@@ -37,14 +39,14 @@
 											{/if}
 
 											{if $item.state_id}
-												<span class="fa fa-map-marker"></span> {$item.city[0]}/{$item.state[0]}
+												<span class="fa fa-map-marker"></span> {$item.city}/{$item.state}
 												</br>
 											{/if}
 
 											{if $item.member_id}
 											<span class="fa fa-user"></span>
 												{lang key='published_by'}
-												<a href="{$smarty.const.IA_URL}member/{$item.member_id}.html">{$item.owner_name[0]}</a>
+												<a href="{$smarty.const.IA_URL}member/{$item.member_id}.html" target="_blank">{$item.owner_name}</a>
 												</br>
 											{/if}
 
@@ -81,14 +83,14 @@
 																		{/if}
 
 																		{if $item.state_id}
-																			<span class="fa fa-map-marker"></span> {$item.city[0]}/{$item.state[0]}
+																			<span class="fa fa-map-marker"></span> {$item.city}/{$item.state}
 																			</br>
 																		{/if}
 
 																		{if $item.member_id}
 																		<span class="fa fa-user"></span>
 																			{lang key='published_by'}
-																			<a href="{$smarty.const.IA_URL}member/{$item.member_id}.html">{$item.owner_name[0]}</a>
+																			<a href="{$smarty.const.IA_URL}member/{$item.member_id}.html" target="_blank">{$item.owner_name}</a>
 																			</br>
 																		{/if}
 																		<p>{$description}</p>
@@ -118,6 +120,7 @@
 			{/foreach}
 		</div>
 	</form>
+</div>
 
 	{navigation aTotal=$pagination.total aTemplate=$pagination.template aItemsPerPage=$core.config.blog_number aNumPageItems=5}
  	{ia_add_media files='js:_IA_URL_modules/adopta/js/frontend/order, css:_IA_URL_modules/adopta/templates/front/css/style'}
