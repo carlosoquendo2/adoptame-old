@@ -199,7 +199,7 @@ SQL;
     protected function _consultCity($state)
     { 
         if (!empty($state)) {
-            $cities = [];
+            $cities = ['0' => ['city' => iaLanguage::get('_select_')]];
             $id = $this->_iaDb->onefield(iaDb::ID_COLUMN_SELECTION, 'state='.$state, 0, 0, 'city');
             $names = $this->_iaDb->onefield("city", 'state='.$state, 0, 0, 'city');
             for ($i=0; $i < count($id); $i++) {

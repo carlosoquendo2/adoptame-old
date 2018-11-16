@@ -67,11 +67,11 @@ $(function()
 	$("#state").change(function() {
 		$("#state option:selected").each(function() {
 			state_id = $(this).val();
+			debugger;
 			intelli.post(intelli.config.admin_url + '/actions/read.json', {action: 'custom-action', state_id: state_id}, 
 			function (response) {
 				cities = document.getElementById('city');
 				$("#city").empty();
-				$("#city").append(new Option('-- select --', 0));
 				response.forEach(element => {
 					$("#city").append(new Option(element.city, element.id));
 				}); 
@@ -93,7 +93,7 @@ $(function()
 
 function clearCities(cities) {
 	while (cities.length() > o) {
-		alert("Se limpiará el combo" + cities);
+		//alert("Se limpiará el combo" + cities);
 		cities.remove(cities.length-1);
 	}
 }

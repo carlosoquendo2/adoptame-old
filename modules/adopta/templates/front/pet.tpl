@@ -6,7 +6,7 @@
 		<div class="wrap-group">
 			<div class="wrap-group-heading">
 				<!-- Titulo sección -->
-				<h4>{lang key='options'}</h4>
+				<h4>{lang key='information'}</h4>
 			</div>
 			<!-- Label Categoría y opción de selección -->
 			<div class="row">
@@ -40,15 +40,6 @@
 					{ia_html_file name='image' id='input-image'}
 				</div>
 			</div>
-
-			{*
-			<div class="row">
-				<label class="col col-lg-2 control-label" for="input-days">{lang key='days'} {lang key='field_required'}</label>
-				<div class="col col-lg-4">
-					<input type="text" name="days" id="input-days" value="{if isset($item.days)}{$item.days}{elseif isset($smarty.post.days)}{$smarty.post.days}{/if}">
-				</div>
-			</div>
-			*}
 
 			<!-- Label estado y opción de selección -->
 			<div class="row">
@@ -92,8 +83,8 @@
 				<div class="col col-lg-4">
 					<select name="state" id="state">
 						<option value="0">{lang key='_select_'}</option>
-						{foreach $states as $state}
-							<option value="{$state}" {if isset($item.state_id) && $item.state_id == $state} selected="selected"{/if} {if isset($smarty.post.state_id) && $state == $smarty.post.state_id}selected{/if}>{lang key="state_"|cat:$state}</option>
+						{foreach $states as $key => $state}
+							<option value="{$key}" {if isset($item.state_id) && $item.state_id == $key} selected="selected"{/if} {if isset($smarty.post.state_id) && $state == $smarty.post.state_id}selected{/if}>{$state.state}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -105,100 +96,40 @@
 				<div class="col col-lg-4">
 					<select name="city" id="city">
 						<option value="0">{lang key='_select_'}</option>
-						{foreach $cities as $city}
-							<option value="{$city}" {if isset($item.city_id) && $item.city_id == $city} selected="selected"{/if} {if isset($smarty.post.city_id) && $city == $smarty.post.city_id}selected{/if}>{lang key="city_"|cat:$city}</option>
+						{foreach $cities as $key => $city}
+							<option value="{$key}" {if isset($item.city_id) && $item.city_id == $key} selected="selected"{/if} {if isset($smarty.post.city_id) && $city == $smarty.post.city_id}selected{/if}>{$city.city}</option>
 						{/foreach}
 					</select>
 				</div>
 			</div>
 
-			{if isset($item.member_id)}
-				<div class="row">
-					<label class="col col-lg-2 control-label">{lang key='owner'} {lang key='field_required'}</label>
-
-					<div class="col col-lg-4">
-						<input type="text" autocomplete="off" id="js-owner-autocomplete" name="owner" value="{$item.owner|escape}" maxlength="255">
-						<input type="hidden" name="member_id" id="member-id"{if !empty($item.member_id)} value="{$item.member_id}"{/if}>
-					</div>
-				</div>
-			{/if}
-		</div>
-
-		<div class="wrap-group" id="js-content-fields">
+			
+			<!--Nombre y descripción-->
 			<div class="row">
-				<ul class="nav nav-tabs">
-					{foreach $core.languages as $code => $language}
-						<li{if $language@iteration == 1} class="active"{/if}><a href="#tab-language-{$code}" data-toggle="tab" data-language="{$code}">{$language.title}</a></li>
-					{/foreach}
-				</ul>
-
-				<div class="tab-content">
-					{foreach $core.languages as $code => $language}
-						<div class="tab-pane{if $language@first} active{/if}" id="tab-language-{$code}">
-							<div class="row">
-								<label class="col col-lg-2 control-label">{lang key='name'} {lang key='field_required'}</label>
-								<div class="col col-lg-10">
-									<input type="text" name="title[{$code}]" value="{if isset($item.title.$code)}{$item.title.$code|escape:'html'}{/if}">
-								</div>
-							</div>
-							<div class="row js-local-url-field">
-								<label class="col col-lg-2 control-label">{lang key='description'}</label>
-								<div class="col col-lg-10">
-									<textarea rows="30" name="description[{$code}]">{if isset($item.description.$code)}{$item.description.$code|escape:'html'}{/if}</textarea>
-								</div>
-							</div>
-						</div>
-					{/foreach}
+				<label class="col col-lg-2 control-label">{lang key='name'} {lang key='field_required'}</label>
+				<div class="col col-lg-4">
+					<input type="text" name="title" value="{lang key=$item.title|escape}"></input>
+				</div>
+			</div>
+			<div class="row">
+				<label class="col col-lg-2 control-label">{lang key='description'}</label>
+				<div class="col col-lg-4">
+					<textarea rows="15" name="description" value="{lang key=$item.description|escape}"></textarea>
 				</div>
 			</div>
 		</div>
 
 		<div class="form-actions inline">
-			<button type="submit" name="save" class="btn btn-primary">{if iaCore::ACTION_EDIT == $pageAction}{lang key='save_changes'}{else}{lang key='add'}{/if}</button>
+			<button type="submit" name="save" class="btn btn-primary">{lang key='save'}</button>
 		</div>
 	</div>
 </form>
 
-{ia_print_js files='ckeditor/ckeditor, _IA_URL_modules/adopta/js/admin/pets'}
-{ia_add_media files='js:_IA_URL_modules/shopping_cart/js/frontend/order, css:_IA_URL_modules/shopping_cart/templates/front/css/style'}
-{ia_add_media files='js:_IA_URL_modules/adopta/js/frontend/order, css:_IA_URL_modules/adopta/templates/front/css/style'}
+{ia_add_media files='js:_IA_URL_modules/adopta/js/frontend/pet'}
+{ia_add_media files='css:_IA_URL_modules/adopta/templates/front/css/style'}
 
 {ia_add_js}
-	//Updating owner
-	$('#js-owner-autocomplete').typeahead(
-    {
-        source: function(query, process)
-        {
-            $.ajax(
-            {
-                url: intelli.config.ia_url + 'actions.json',
-                type: 'get',
-                dataType: 'json',
-                data: { q: query, action: 'assign-owner' },
-                success: function(response)
-                {
-                    objects = pets = [];
-                    $.each(response, function(i, object)
-                    {
-                        pets[object.fullname] = object;
-                        objects.push(object.fullname);
-                    });
-
-                    return process(objects);
-                }
-            })
-        },
-        updater: function(item)
-        {
-            $('#member-id').val(pets[item].id);
-            return item;
-        },
-        matcher: function()
-        {
-            return true;
-        }
-    });
-
+	
 	//validate age
 	$('#age').change(function(e) {
 		var age = $(this).val();

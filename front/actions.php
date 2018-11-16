@@ -147,6 +147,21 @@ if (iaView::REQUEST_JSON == $iaView->getRequestType() && isset($_POST['action'])
             }
 
             break;
+        
+        case 'get-cities':
+            if (iaView::REQUEST_JSON == $iaView->getRequestType()) {
+                $state = $_POST['state_id'];
+                $output = ['0' => ['city' => iaLanguage::get('_select_')]];
+                if (!empty($state)) {
+                    $cities = $iaDb->assoc('id, city', 'state='.$state, 'city');
+                    if ($cities != null) {;
+                        foreach ($cities as $key => $value) {
+                            array_push($output, $value);
+                        }
+                    }
+                }
+            }
+            break;
 
         default:
             $output = [];
