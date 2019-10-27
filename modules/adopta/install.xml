@@ -49,6 +49,8 @@
 	
 <<<<<<< HEAD
 		<phrase category="common" key="published_by">Published by</phrase>
+		<phrase category="common" key="sterilized">Sterilized</phrase>
+		<phrase category="common" key="complete_vaccination_scheme">Complete vaccination scheme</phrase>
 =======
 >>>>>>> 0b3ef90b060f3dbc38b3a9cf62a3f81711df7d54
 		<phrase category="common" key="request_adoption">Request adoption</phrase>
@@ -100,7 +102,9 @@ CREATE TABLE `{prefix}pet_items`(
 	`gender` enum('male','female') NULL DEFAULT 'male',
 	`state_id` int(8) NULL,
 	`city_id` int(9) NULL,
-	`description` text NOT NULL
+	`description` text NOT NULL,
+	`sterilized` tinyint(1) NULL DEFAULT '0',
+	`vaccination` tinyint(1) NULL DEFAULT '0'
 ) {mysql_version};
 			]]>
 		</sql>

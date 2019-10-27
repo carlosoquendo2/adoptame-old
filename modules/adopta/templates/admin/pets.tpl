@@ -72,6 +72,28 @@
 				</div>
 			</div>
 
+			<!-- Label esterilizado y opción de selección -->
+			<div class="row">
+				<label class="col col-lg-2 control-label">{lang key='sterilized'}</label>
+				<div class="col col-lg-4">
+					<select name="sterilized">
+						<option value="1" {if isset($item.sterilized) && 1 == $item.sterilized}selected="selected"{/if}>{lang key='yes'}</option>
+						<option value="0" {if isset($item.sterilized) && 0 == $item.sterilized}selected="selected"{/if}>{lang key='no'}</option>
+					</select>
+				</div>
+			</div>
+
+			<!-- Label esquema de vacunación y opción de selección -->
+			<div class="row">
+				<label class="col col-lg-2 control-label">{lang key='complete_vaccination_scheme'}</label>
+				<div class="col col-lg-4">
+					<select name="vaccination">
+						<option value="1" {if isset($item.vaccination) && 1 == $item.vaccination}selected="selected"{/if}>{lang key='yes'}</option>
+						<option value="0" {if isset($item.vaccination) && 0 == $item.vaccination}selected="selected"{/if}>{lang key='no'}</option>
+					</select>
+				</div>
+			</div>
+
 			<!-- Label edad, inpunt(number) y opción de selección -->
 			<div class="row">
 				<label class="col col-lg-2 control-label">{lang key='age'} {lang key='field_required'}</label>
@@ -144,7 +166,7 @@
 							<div class="row js-local-url-field">
 								<label class="col col-lg-2 control-label">{lang key='description'}</label>
 								<div class="col col-lg-10">
-									<textarea rows="30" name="description[{$code}]">{if isset($item.description.$code)}{$item.description.$code|escape:'html'}{/if}</textarea>
+									<textarea rows="30" name="description[{$code}]">{if isset($item.description.$code)}{$item.description.$code|escape:html}{/if}</textarea>
 								</div>
 							</div>
 						</div>

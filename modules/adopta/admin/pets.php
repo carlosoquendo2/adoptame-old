@@ -115,6 +115,8 @@ class iaBackendController extends iaAbstractControllerModuleBackend
 		$entry['description'] = "pet_item_description_".$this->_entryId;
 		$entry['status'] = $data['status'];
 		$entry['gender'] = $data['gender'];
+		$entry['sterilized'] = $data['sterilized'];
+		$entry['vaccination'] = $data['vaccination'];
 		$entry['age'] = $data['age'];
 		$entry['age_type'] = $data['age_type'];
 		$entry['member_id'] = $data['member_id'];
